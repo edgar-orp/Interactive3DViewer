@@ -14,6 +14,18 @@ namespace dev.xrlab.interactive3dviewer.ui
             button.onClick.AddListener(OnClick);
         }
 
+        private void OnEnable()
+        {
+            HotspotEvents.OnHotspotActivated += OnAnyHotspotActivated;
+            HotspotEvents.OnHotspotExited += OnHotspotExited;
+        }
+
+        private void OnDisable()
+        {
+            HotspotEvents.OnHotspotActivated -= OnAnyHotspotActivated;
+            HotspotEvents.OnHotspotExited -= OnHotspotExited;
+        }
+
         private void OnDestroy()
         {
             button.onClick.RemoveListener(OnClick);
@@ -23,5 +35,18 @@ namespace dev.xrlab.interactive3dviewer.ui
         {
             HotspotEvents.OnHotspotActivated?.Invoke(hotspotData);
         }
+
+        private void OnAnyHotspotActivated(HotspotData data)
+        {
+            if (button.gameObject.activeSelf)
+                button.gameObject.SetActive(false);
+        }
+
+        private void OnHotspotExited(HotspotData data)
+        {
+            if (!button.gameObject.activeSelf)
+                button.gameObject.SetActive(true);
+        }
+
     }
 }
